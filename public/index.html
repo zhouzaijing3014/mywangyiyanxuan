@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"  content="width=device-width, user-scalable=no, initial-scale=0.5">
+    <!-- <link rel="icon" href="<%= BASE_URL %>favicon.ico"> -->
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_1357415_wn843llgvup.css">
+    <link rel="stylesheet" href="./css/reset.css">
+    <title>demo_wy</title>
+  </head>
+  <body>
+    
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+    <script>
+      let htmlWidth = document.documentElement.clientWidth ||
+          document.body.clientWidth;
+      //获取htmlDom
+      let htmlDom = document.getElementsByTagName('html')[0];
+      //设置html的font-size
+      htmlDom.style.fontSize = htmlWidth/10+'px';
+
+      window.addEventListener('resize',(e)=>{
+          let htmlWidth = document.documentElement.clientWidth ||
+              document.body.clientWidth;
+          console.log(htmlWidth);
+          //获取htmlDom
+          let htmlDom = document.getElementsByTagName('html')[0];
+          //设置html的font-size
+          htmlDom.style.fontSize = htmlWidth/10+'px';
+      });
+
+  </script>
+  </body>
+</html>
