@@ -7,7 +7,8 @@
     navList: [], // 导航列表
     componentfour:[],//私人定制 有轮播
     quanqiugou:[],//全球购
-    newItemList:[]
+    newItemList:[],
+    user:''
  } 
 
 
@@ -21,7 +22,13 @@
             commit('persondingzhi',result.data.personalShop)
             commit('personlowerTime',result.data.flashSaleModule.itemList)
             commit('newItemList',result.data.newItemList)
+            // commit('huoquUserName',user)
         }
+     },
+         huoquUserNamea({commit},user){
+       
+            commit('huoquUserName',user)
+        
      }
  }
 
@@ -42,6 +49,11 @@
     },
     newItemList(state,data){
         state.newItemList = data
+    },
+    huoquUserName(state,data){
+        state.user = data.name
+        localStorage.setItem("datas",data.name)
+        console.log(localStorage)
     }
 
 

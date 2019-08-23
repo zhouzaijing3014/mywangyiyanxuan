@@ -5,19 +5,22 @@
         <div class="appwarpheader">
             <div class="appseachinput1">
                 <i class="iconfont icon-sousuo" ></i>
-                <input type="text" class="appseachinput2" placeholder="嗨">
+                <input type="text" class="appseachinput2" placeholder="嗨" v-model="value">
             </div>
             <span class="deltext" @click="$router.back()">取消</span>
         </div>
         <header class="appwarheaderlogo">热门搜索</header>
         <div class="appwarpnav">
-            <a href="javascript:;" class="red">爆款 行李箱</a>
+          <ul>
+            <li class="aa" v-for="(item, index) in shuju.data" :key="index">{{item}}</li>
+          </ul>
+            <!-- <a href="javascript:;" class="red">爆款 行李箱</a>
             <a href="javascript:;">香氛牙膏 谈吐芳香</a>
             <a href="javascript:;">轻弹云朵拖鞋9.9元</a>
             <a href="javascript:;">爆款 行李箱</a>
             <a href="javascript:;">爆款 行李箱</a>
             <a href="javascript:;">爆款 行李箱</a>
-            <a href="javascript:;">爆款 行李箱</a>
+            <a href="javascript:;">爆款 行李箱</a> -->
 
         </div>
     </div>
@@ -25,9 +28,42 @@
 <div class="seachzhezhao"></div>
 </div>
 </template>
-
 <script type="text/ecmascript-6">
+import {reqKeyWords} from '../../api'
+import { setTimeout, clearTimeout } from 'timers';
   export default {
+    data(){
+      return{
+        value:'',
+        shuju:{},
+
+      }
+    },
+     mounted(){
+      
+    },
+   
+    
+    computed:{
+     
+    },
+    watch:{
+      value(){ 
+        clearTimeout(this.timer)
+        this.timer=  setTimeout(async() => {
+        const shujuT=await reqKeyWords(this.value)
+         console.log(shujuT)
+         this.shuju = shujuT.data  
+           }, 1000);
+ 
+     
+
+        
+       
+      }
+      
+    }
+
   }
 </script>
 
@@ -76,7 +112,7 @@
       background-color white
       font-size rem(26px)
       padding 0 rem(30px)
-      a
+      .aa
         height rem(47px)
         display inline-block
         text-align center

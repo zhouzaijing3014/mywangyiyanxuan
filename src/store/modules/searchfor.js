@@ -33,3 +33,29 @@
 // actions,
 // getters
 // }
+
+const state={
+    data:{}
+}
+const actions={
+    shuju({commit},user){
+        localStorage.setItem('token_key',user.token)
+        commit('resolve',{token:user.token})
+        delete user.token
+        commit('broke',{user})
+    }
+}
+const mutations={
+    resolve(state,data){
+        state.data = data
+    }
+}
+const getters={
+
+}
+export{
+    state,
+    actions,
+    mutations,
+    getters
+}

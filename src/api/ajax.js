@@ -7,27 +7,38 @@
  *    2.统一管理请求失败的状态
  */
 import axios from 'axios'
-//import eq from 'qs'
+import qs from 'qs'
+
+axios.interceptors.request.use((config) => {
+  const {method, data} = config  
+  // 如果是携带数据的post请求, 进行处理
+  if (method.toLowerCase()==='post' && data && typeof data==='object') {
+    config.data = qs.stringify(data) // {name: 'tom', pwd: '123'} ==> name=tom&pwd=123
+  }
+  return config;
+});
 
 
+// export default axios
 
 export default function ajax (url, data = {}, method = 'GET') {
-    return new Promise((resolve, reject) => {
-      let promise;
-      if (method === 'GET') {
-       promise = axios.get(url, {
-          params: data
-        })
-      } else {
-       promise = axios.post(url, data);
-      }
-      promise
-        .then(response => {
-          resolve(response.data);
-        })
-        .catch(error => {
-          alert('请求失败' + error.msg);
-        })
-    });
-  }
+  return new Promise((resolve, reject) => {
+    let promise;
+    if (method === 'GET') {
+     promise = axios.get(url, {
+        params: data
+      })
+    } else {
+     promise = axios.post(url, data);
+    }
+    promise
+      .then(response => {
+        console.log('请求成功');
+        resolve(response.data);
+      })
+      .catch(error => {
+        alert('请求失败' + error.msg);
+      })
+  });
+}
   

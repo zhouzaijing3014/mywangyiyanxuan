@@ -11,7 +11,8 @@
       </div>
       
       <span class="login_btn" @click="$router.push('/profile')">
-        登录
+      
+        {{userName?userName:'登录'}}   
       </span>
     </div>
     
@@ -48,13 +49,17 @@
     data () {
       return {
         isOpen: false,
-        isShow: -1
+        isShow: -1,
+        name:'',
+        userName:''
       }
     },
     computed:{
-      ...mapState({kingKongList:state=>state.home.navList})
+      ...mapState({kingKongList:state=>state.home.navList}),
+      
     },
     mounted () {
+      this.userName = localStorage.getItem("datas")
       this.$nextTick(()=>{
         if(!this.bScroll){
           this.bScroll = new BScroll(".left_ul_box", {

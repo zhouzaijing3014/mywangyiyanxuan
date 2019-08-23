@@ -24,7 +24,7 @@
     </div>
     <div class="email-login" v-show="!$route.query.isPhoneLogin">
       <div class="email">
-        <input type="text" placeholder="邮箱账号" v-model="email">
+        <input type="text" placeholder="用户名" v-model="name">
       </div>
       <div class="pwd">
         <input type="password" placeholder="密码" v-model="pwd">
@@ -33,8 +33,9 @@
         <span>{{errorMsg}}</span>
       </div>
       <div class="get-help">
-        <span @click="$router.replace({path: '/profile/register', query: {isPhoneRegis: true}})">注册账号</span>
-        <span>忘记密码</span>
+       <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">
+        <img class="get_verification" src="http://localhost:4000/captcha" alt="captcha"
+          @click="updateCapcha" ref='captcha'>
       </div>
       <button class="login" @click="login">登录</button>
     </div>
@@ -49,14 +50,17 @@
   </section>
 </template>
 <script>
+import {reqPwdLogin} from '../../../api'
+// import {huoquUserName} from '../../../store/modules/home.js'
   export default {
     data () {
       return {
         errorMsg: '', // 验证失败提示错误信息
         phone: '', // 用户输入手机号
         code: '', // 用户输入验证码
-        email: '', // 用户输入邮箱
-        pwd: '' // 用户输入密码
+        name: '', // 用户输入
+        pwd: '', // 用户输入密码
+        captcha:''
       }
     },
     props: {
@@ -64,43 +68,60 @@
     },
     methods: {
       toggleLoginMethod () {
-        console.log(111)
         this.setIsShow();
       },
-      login () {
+      updateCapcha () {
+        // 给img指定一个新的src值, 携带一个时间戳的参数
+        this.$refs.captcha.src = 'http://localhost:4000/captcha?time=' + Date.now()
+      },
+      watch: {
+     
+      },
+      async login () {
         // 进行前端表单验证
-        const {phone, code, email, pwd} = this;
-        if (this.$route.query.isPhoneLogin) {
-          // 手机登录
-          if (phone.trim() === '') {
-            this.errorMsg = '手机号不能为空';
-          } else if (!(/^1[3456789]\d{9}$/.test(phone))) {
-            this.errorMsg = '手机号格式不正确';
-          } else if (code.trim() === '') {
-            this.errorMsg = '验证码不能为空';
-          } else if (!(/^\d{6}$/.test(code))) {
-            this.errorMsg = '请输入正确的6位数字验证码';
-          } else {
-            this.errorMsg = '';
-            console.log('登录成功');
-          }
-        } else {
-          // 邮箱登陆
-          if (email.trim() === '') {
-            this.errorMsg = '邮箱不能为空';
-          } else if (!(/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/.test(email))) {
-            this.errorMsg = '邮箱格式不正确';
-          } else if (pwd.trim() === '') {
-            this.errorMsg = '密码不能为空';
-          } else if (pwd.length < 6) {
-            this.errorMsg = '密码应不小于6位';
-          } else if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[a-zA-Z0-9]{6,20}/.test(pwd)) {
-            this.errorMsg = '密码必须由数字和字母组成';
-          } else {
-            this.errorMsg = '';
-            console.log('登录成功');
-          }
+        const {phone, code, name, pwd,captcha} = this;
+       let result = await reqPwdLogin({ name, pwd, captcha })
+        result = result.data
+        // console.log(result,"1111")
+        if(result.code ===0){
+          const user = result.data
+          console.log(user)
+          this.$store.dispatch('huoquUserNamea',user)
+          this.$router.replace('/home')
+        }else{
+          alert(result.msg)
         }
+        // if (this.$route.query.isPhoneLogin) {
+        //   // 手机登录
+        //   if (phone.trim() === '') {
+        //     this.errorMsg = '手机号不能为空';
+        //   } else if (!(/^1[3456789]\d{9}$/.test(phone))) {
+        //     this.errorMsg = '手机号格式不正确';
+        //   } else if (code.trim() === '') {
+        //     this.errorMsg = '验证码不能为空';
+        //   } else if (!(/^\d{6}$/.test(code))) {
+        //     this.errorMsg = '请输入正确的6位数字验证码';
+        //   } else {
+        //     this.errorMsg = '';
+        //     console.log('登录成功');
+        //   }
+        // } else {
+        //   // 邮箱登陆
+        //   if (email.trim() === '') {
+        //     this.errorMsg = '邮箱不能为空';
+        //   } else if (!(/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/.test(email))) {
+        //     this.errorMsg = '邮箱格式不正确';
+        //   } else if (pwd.trim() === '') {
+        //     this.errorMsg = '密码不能为空';
+        //   } else if (pwd.length < 6) {
+        //     this.errorMsg = '密码应不小于6位';
+        //   } else if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[a-zA-Z0-9]{6,20}/.test(pwd)) {
+        //     this.errorMsg = '密码必须由数字和字母组成';
+        //   } else {
+        //     this.errorMsg = '';
+        //     console.log('登录成功');
+        //   }
+        // }
       }
     }
   }
